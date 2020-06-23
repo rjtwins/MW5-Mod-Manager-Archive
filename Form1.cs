@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Octokit;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -42,29 +41,6 @@ namespace MW5_Mod_Manager
             this.rotatingLabel1.NewText = "<- Low Priority --- High Priority ->";     // whatever you want to display
             this.rotatingLabel1.ForeColor = Color.Black; // color to display
             this.rotatingLabel1.RotateAngle = -90;     // angle to rotate
-
-            if (!logic.VersionUpToDate())
-            {
-                string message = "There is a new version of this application available, would you like to goto download it?";
-                string caption = "New Version Available";
-                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                DialogResult Result = MessageBox.Show(message, caption, buttons);
-                if (Result == DialogResult.Yes)
-                {
-                    string systemPath = System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-                    string complete = Path.Combine(systemPath, @"MW5LoadOrderManager");
-                    string exeLocation = System.Reflection.Assembly.GetEntryAssembly().Location;
-
-                    Process proc = new Process();
-                    proc.StartInfo.FileName = complete + @"\MW5LoadOrderManagerUpdater.exe";
-                    proc.StartInfo.Arguments = "\"" + complete +"\" \"" + exeLocation + "\" " + logic.Version.ToString() + " " + logic.NewVersion.ToString();
-                    proc.StartInfo.UseShellExecute = true;
-                    proc.StartInfo.Verb = "runas";
-                    proc.Start();
-                    Application.Exit();
-                    //System.Diagnostics.Process.Start(@"https://github.com/rjtwins/MW5-Mod-Manager/releases/download/0.9/MW5.Mod.Manager.exe");
-                }
-            }
         }
 
         //Up button

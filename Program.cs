@@ -7,7 +7,6 @@ using System.Linq;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Reflection;
-using Octokit;
 using Application = System.Windows.Forms.Application;
 
 namespace MW5_Mod_Manager
@@ -50,15 +49,6 @@ namespace MW5_Mod_Manager
         public string BasePath = "";
         public string[] Directories;
         public Dictionary<string, bool> ModList = new Dictionary<string, bool>();
-
-        //Check if the version on github is higher then the version we have here, if so return false, else return true;
-        public bool VersionUpToDate()
-        {
-            var client = new GitHubClient(new ProductHeaderValue("MW5LoadOrderManager"));
-            var release = client.Repository.Release.GetLatest("rjtwins", "MW5-Mod-Manager");
-            this.NewVersion = float.Parse(release.Result.TagName);
-            return this.Version >= NewVersion;
-        }
 
         public Dictionary<string, ModObject> ModDetails = new Dictionary<string, ModObject>();
         public string rawJson;
