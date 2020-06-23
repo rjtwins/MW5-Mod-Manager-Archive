@@ -13,19 +13,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-#    - name: Setup .NET Core
-#      uses: actions/setup-dotnet@v1
-#      with:
-#        dotnet-version: 3.1.101
-#        config-file: packages.config
-#    - name: Install dependencies
-#      run: dotnet restore
-    - name: Setup MSBuild.exe
-      uses: warrenbuckley/Setup-MSBuild@v1
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.0
       
     - name: MSBuild
-      working-directory: src
-      run: msbuild MW5 Mod Manager.csproj
+      run: msbuild
 
 #    - name: Build
 #      run: dotnet build --configuration Release --no-restore
