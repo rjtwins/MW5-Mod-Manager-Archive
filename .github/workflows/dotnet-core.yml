@@ -8,15 +8,8 @@ on:
 
 jobs:
   build:
-
     runs-on: windows-latest
-
     steps:
-    - uses: olegtarasov/get-tag@v2
-      id: tagName
-    
-    - name: Display tag
-      run: echo ${{ steps.tagName.outputs.tag }}
 
     - name: Display tag 2
       run: echo ${{ github.event.ref }}
