@@ -12,9 +12,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Get Tag From Commit
     - uses: olegtarasov/get-tag@v2
       id: tagName
+    
     - name: Display tag
       run: echo ${{ steps.tagName.outputs.tag }}
 
