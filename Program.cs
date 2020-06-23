@@ -39,8 +39,7 @@ namespace MW5_Mod_Manager
 
     public class MainLogic
     {
-        public float Version = 0.85f;
-        public float NewVersion = 0f;
+        public ProgramData ProgramData = new ProgramData();
         public string Vendor = "";
         public bool CreatedModlist = false;
         public JObject parent;
@@ -109,22 +108,19 @@ namespace MW5_Mod_Manager
                 System.IO.Directory.CreateDirectory(complete);
             }
 
-            Console.WriteLine(complete);
-            Console.WriteLine(this.Vendor);
             try
             {
-                string[] text = System.IO.File.ReadLines(complete + @"\installdir.txt").ToArray<string>();
-                if (text[0] != null && text[0] != "")
-                {
-                    this.BasePath = text[0];
-                }
-                if (text[1] != null && text[1] != "")
-                {
-                    this.Vendor = text[1];
-                }
+                string json = File.ReadAllText(complete + @"\ProgramData.json");
+                this.ProgramData = JsonConvert.DeserializeObject<ProgramData>(json);
 
-                Console.WriteLine(this.BasePath);
-                Console.WriteLine(this.Vendor);
+                if (this.ProgramData.installdir != null && this.ProgramData.installdir != "")
+                {
+                    this.BasePath = this.ProgramData.installdir;
+                }
+                if (this.ProgramData.vendor != null && this.ProgramData.vendor != "")
+                {
+                    this.Vendor = this.ProgramData.vendor;
+                }
             }
             catch (Exception e)
             {
@@ -140,9 +136,10 @@ namespace MW5_Mod_Manager
         {
             try
             {
+                this.ProgramData = new ProgramData();
                 string systemPath = System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                 string complete = Path.Combine(systemPath, @"MW5LoadOrderManager");
-                System.IO.File.WriteAllText(complete + @"\installdir.txt", " ");
+                System.IO.File.WriteAllText(complete + @"\ProgramData.json", " ");
             }catch(Exception Ex)
             {
                 return;
@@ -194,6 +191,8 @@ namespace MW5_Mod_Manager
         {
             this.ModDetails = new Dictionary<string, ModObject>();
             this.ModList = new Dictionary<string, bool>();
+            this.ProgramData = new ProgramData();
+            this.BasePath = "";
         }
 
         //Check if the mod dir is already present in data loaded from modlist.json, if not add it.
@@ -447,5 +446,12 @@ namespace MW5_Mod_Manager
         public float defaultLoadOrder { set; get; }
         public string gameVersion { set; get; }
         public List<string> manifest { get; set; }
+    }
+
+    public class ProgramData
+    {
+        public string vendor { set; get; }
+        public float version { set; get; }
+        public string installdir { set; get; }
     }
 }

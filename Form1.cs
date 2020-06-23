@@ -151,12 +151,17 @@ namespace MW5_Mod_Manager
                     listView1.Items.Add(item1);
                 }
 
+                this.logic.ProgramData.installdir = logic.BasePath;
+                this.logic.ProgramData.vendor = logic.Vendor;
+
                 string systemPath = System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                 string complete = Path.Combine(systemPath, @"MW5LoadOrderManager");
-                System.IO.File.WriteAllText(complete + @"\installdir.txt", logic.BasePath);
-                using (StreamWriter sw = File.AppendText(complete +  @"\installdir.txt"))
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Formatting = Formatting.Indented;
+                using (StreamWriter sw = new StreamWriter(complete + @"\ProgramData.json"))
+                using (JsonWriter writer = new JsonTextWriter(sw))
                 {
-                    sw.WriteLine("\n" + logic.Vendor);
+                    serializer.Serialize(writer, logic.ProgramData);
                 }
             }
             catch (Exception e)
@@ -259,7 +264,10 @@ namespace MW5_Mod_Manager
         private void button6_Click(object sender, EventArgs e)
         {
             ClearAll();
-            LoadAndFill(false);
+            if (logic.TryLoadInstallDir())
+            {
+                LoadAndFill(false);
+            }
         }
 
         //Image
@@ -343,8 +351,6 @@ namespace MW5_Mod_Manager
             this.button4.Enabled = true;
             this.windowsStoreToolStripMenuItem.Enabled = true;
             this.epicStoreToolStripMenuItem.Enabled = false;
-            logic.TryLoadInstallDir();
-            LoadAndFill(false);
             this.textBox1.Text = logic.BasePath;
         }
 
